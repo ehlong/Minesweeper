@@ -5,7 +5,7 @@ import random
 
 class msModel:
     def __init__(self):
-        self.newGame(1)
+        self.newGame(1)         # dummy value passed
 
     def newGame(self, bombs):
         clicked = 0
@@ -13,10 +13,9 @@ class msModel:
         rows = bombs
         bombs = bombs
         grid = [[0] * (rows) for i in range(cols)]
-        self.puzzle = grid
+        self.grid = grid
         self.clicked = clicked
         self.bombs = bombs
-        bombCount = rows
         bomb = '*'
         for x in range(0, rows):
             y = random.randrange(rows)
@@ -25,7 +24,7 @@ class msModel:
                 grid[y][z] = bomb
             else:
                 x = x - 1                   # sets bombs in grid
-        for x in range(0, rows):
+        for x in range(0, rows):            # for loop builds values for adjacent squares
             for y in range(0, cols):
                 if grid[x][y] != '*':       # if not bomb
                     if x == 0:              # if in first row
@@ -36,7 +35,7 @@ class msModel:
                                 grid[x][y] += 1
                             if grid[1][1] == '*':
                                 grid[x][y] += 1
-                        elif y == cols - 1:
+                        elif y == cols - 1: # if in last col
                             for q in range(x, x + 2):
                                 for z in range(y - 1, y + 1):
                                     if grid[q][z] == '*':
@@ -46,7 +45,7 @@ class msModel:
                                 for z in range(y - 1, y + 2):
                                     if grid[q][z] == '*':
                                         grid[x][y] += 1
-                    elif x == rows - 1:
+                    elif x == rows - 1:     # if in last row
                         if y == 0:          # if in first col
                             if grid[rows - 2][0] == '*':
                                 grid[x][y] += 1
@@ -54,7 +53,7 @@ class msModel:
                                 grid[x][y] += 1
                             if grid[rows - 1][1] == '*':
                                 grid[x][y] += 1
-                        elif y == cols - 1:
+                        elif y == cols - 1: # in in last col
                             if grid[rows - 2][cols - 1] == '*':
                                 grid[x][y] += 1
                             if grid[rows - 2][cols - 2] == '*':
@@ -80,22 +79,19 @@ class msModel:
                                 for z in range(y, y + 2):
                                     if grid[q][z] == '*':
                                         grid[x][y] += 1
-        for x in range(0, bombs):
-            print(grid[x])
+        # for x in range(0, bombs):
+            # print(grid[x])
+                                        # left in in case testing desired
+                                        # prints grid values
+                                        # to use, delete # in line 82 and 83
 
     def reveal(self, row, col):
         self.clicked += 1
-        return self.puzzle[row][col]
-
-    #def getMoveCount(self):
-        # returns the number of moves made
+        return self.grid[row][col]
 
     def getState(self, value, clicked):
-        # -1 -- loss
-        #  0 -- in progress
-        #  1 -- win
-        if (100 - self.clicked) == self.bombs:
+        if (self.bombs * self.bombs - self.clicked) == self.bombs:  # if moves left == bombs
             return 1
-        elif value == "*":
+        elif value == "*":      # if on bomb
             return -1
         return 0
